@@ -205,8 +205,35 @@ textarea{
 }
   </style>
   <script>
+    const auth0Lock = new Auth0Lock(
+      'CSCPBZEqVyASURBDbr80JH2CoNnBrcVV',
+      'dev-0r4ywfezrnemfhps.us.auth0.com',
+      {
+        auth: {
+          redirectUrl: window.location.origin,
+          responseType: 'token id_token',
+          params: { scope: 'openid profile email' }
+        },
+        additionalSignUpFields: [
+          { name: 'first_name', placeholder: 'First Name' },
+          { name: 'last_name', placeholder: 'Last Name' },
+          { name: 'sex', placeholder: 'Sex', type: 'select',
+            options: [
+              {value: 'Male', label: 'Male'},
+              {value: 'Female', label: 'Female'},
+              {value: '', label: 'Prefer not to say'}
+            ]
+          },
+          { name: 'birthday', placeholder: 'Birthday', type: 'date'}
+        ],
+        theme: {
+          logo: window.location.origin + '/eclc-logo.png',
+          primaryColor: '#15B2AE'},
+        languageDictionary: {
+          title: "ECLC Connect & Support"}
+      }
+    );
     const GAS_URL = 'https://script.google.com/macros/s/AKfycbxRVZcd0nZnjTBvwPTaHIsUck5wKHU8iEfmYaazWHIuqR0p8kLG6BrwqC-VCwNlHwRERg/exec'; 
- 
     function handleImpact(data) {
       document.getElementById('impact-stats').innerHTML = `
         <p>Total Boxes Picked Up: ${data.pickedUp}</p>
@@ -312,44 +339,11 @@ document.addEventListener('DOMContentLoaded', () => {
     .addEventListener('click', () => shiftDay(-1));
   document.getElementById('next-day')
     .addEventListener('click', () => shiftDay(1));
-}); 
-const auth0Lock = new Auth0Lock(
-  'CSCPBZEqVyASURBDbr80JH2CoNnBrcVV',
-  'dev-0r4ywfezrnemfhps.us.auth0.com',
-  {
-    auth: {
-      redirectUrl: window.location.origin,
-      responseType: 'token id_token',
-      params: { scope: 'openid profile email' }
-    },
-    additionalSignUpFields: [
-      { name: 'first_name', placeholder: 'First Name' },
-      { name: 'last_name', placeholder: 'Last Name' },
-      { name: 'sex', placeholder: 'Sex', type: 'select',
-        options: [
-          {value: 'Male', label: 'Male'},
-          {value: 'Female', label: 'Female'},
-          {value: '', label: 'Prefer not to say'}
-        ]
-      },
-      { name: 'birthday', placeholder: 'Birthday', type: 'date'}
-    ],
-    theme: {
-      logo: window.location.origin + '/eclc-logo.png',
-      primaryColor: '#15B2AE'
-    },
-    languageDictionary: {
-      title: "ECLC Connect & Support"
-    }
-  }
-);
-document.addEventListener('DOMContentLoaded', () => {
-  document
-    .getElementById('auth-button')
+  document.getElementById('auth-button')
     .addEventListener('click', () => auth0Lock.show());
-});
+}); 
 function handleAuthentication() {
-  auth0Lock.on("authenticated", async authResult => {
+  auth0Lock.on("authenticated", authResult => {
     auth0Lock.getUserInfo(authResult.accessToken, (err, profile) => {
       if (err) return console.error(err);
       localStorage.setItem('access_token', authResult.accessToken);
@@ -361,7 +355,7 @@ function handleAuthentication() {
 }
 function updateUIForSignedInUser(profile) {
   const btn = document.getElementById('auth-button');
-  btn.textContent = 'Hi, $(profile.user_metadata.first_name || profile.nickname)';
+  btn.textContent = 'Hi, ${profile.user_metadata.first_name || profile.nickname}';
   btn.onclick = logout;
 }
 function logout() {
@@ -371,7 +365,7 @@ function logout() {
 window.addEventListener('load', () => {
   handleAuthentication();
   const stored = localStorage.getItem('auth_profile');
-  if (stored) updateUIIForSignedInUser(JSON.parse(stored));
+  if (stored) updateUIForSignedInUser(JSON.parse(stored));
 });
   </script>
 </head>
@@ -389,8 +383,9 @@ window.addEventListener('load', () => {
     <div class="header-right" style="cursor:pointer" onClick="showPage('home-page')">Advocate. Resilience.</div>
     <button
       id="auth-button"
-      class="link-button"
-    >Register / Log In</button>
+      class="link-button">
+      Register / Log In
+    </button>
   </div>
   <main>
     <div id="home-page" class="page active">
