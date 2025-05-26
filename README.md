@@ -1,3 +1,5 @@
+__*** The current LIVE branch is "Without Auth0". Ideally, I'd like to go live with Auth0 and allow users to create and maintain accounts. However, I've been having a rough go at it. I will continue my efforts towards making it a reality; however, there are more pressing issues to focus on before I can return to that task. We will be ready to go live as soon as I finish the Community Resources page. Once we are live, I will return to my attempt at making Auth0 a reality. Until then, consider the main branch to be in Alpha. ***__
+
 This repository documents my attempts to create a service for Emerald Coast Life Center(ECLC) that logs the amount of Narcan disseminated to the Okaloosa County community and the subsequent results on the community. 
 
 I've yet to decide whether or not this should be a website, a standalone mobile app, or both. 
