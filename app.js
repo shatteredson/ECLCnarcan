@@ -156,39 +156,6 @@ function updateAccountPage(){
       ['reversal','death'].forEach(i => { if (i !== id) document.getElementById(i).checked = false; });
     }
 function updateImpact() {
-  const range = document.getElementById('impact-range').value;
-  localStorage.setItem('impactRange', range);
-  const s = document.createElement('script');
-  s.src = `${GAS_URL}?action=impact&range=${range}&callback=handleImpact`;
-  document.body.appendChild(s);
-};
-function wire(formId, onSuccess) {
-  const form = document.getElementById(formId);
-  form.addEventListener('submit', e => {
-    e.preventDefault();
-    fetch(GAS_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      body: new FormData(form)
-    })
-    .then(() => onSuccess())
-    .catch(err => {
-      console.error(err);
-      alert('Sorry, there was an error submitting the form');
-    });
-  });
-}
-document.addEventListener('DOMContentLoaded', () => {
-  wire('pickup-form', pickupSuccess);
-  wire('report-form', reportSuccess);
-  wire('volunteer-form', volunteerSuccess);
-  const savedRange = localStorage.getItem('impactRange');
-  if (savedRange) {
-    document.getElementById('impact-range').value = savedRange;
-  }
-  updateImpact();
-});
-function updateImpact() {
   localStorage.setItem('impactRange', range);
   const s = document.createElement('script');
   s.src = `${GAS_URL}?action=impact&range=${range}&callback=handleImpact`;
