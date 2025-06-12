@@ -31,7 +31,6 @@ function setUser(email,name){
     localStorage.setItem('userEmail', email);
     localStorage.setItem('userName', name||'');
     btn.textContent='Account';
-    btn.onclick=()=>showPage('account-page');
   } else {
     localStorage.removeItem('userEmail');
     localStorage.removeItem('userName');
